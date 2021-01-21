@@ -184,7 +184,7 @@
                         </v-form>
                       </v-card-text>
                       <div class="text-center mt-n5">
-                        <v-btn rounded color="purple accent-4" dark @click.prevent="commitToDB()"> Зарегистрироваться</v-btn>
+                        <v-btn rounded color="purple accent-4" dark @click.prevent="signUp()"> Зарегистрироваться</v-btn>
                       </div>
                     </v-col>
                   </v-row>
@@ -238,11 +238,11 @@ data() {
   }
 },
   mounted() {
-    this.$http.get('http://localhost:5001/Game/countries').then(response => this.countries = response.data)
-    this.$http.get('http://localhost:5001/Account/genders').then(response => this.genders = response.data)
+    this.$store.getters.getCountries.then(data => this.countries = data)
+    this.$store.getters.getGenders.then(data => this.genders = data)
   },
   methods:{
-    commitToDB(){
+    signUp(){
       this.player = []
       this.message = ''
       this.error = ''
@@ -254,13 +254,13 @@ data() {
         email: this.registerUser.email,
         password: this.registerUser.password
       }
-      console.log(req)
-      this.$http.post('http://localhost:5001/Account/signUp', req).then(res => {
-        console.log(res.data)
-        this.$store.commit('setPlayer', res.data)
-        this.$router.push({ path: '/' })
-      }).catch(() => this.error = "Не удалось зарегистрировать пользователя :(");
-
+      this.$store.commit('signUp',
+          {
+            player: req,
+            action: () => this.$router.push({ path: '/' }),
+            errorHandler: () => this.error = "Не удалось зарегистрировать пользователя :("
+          }
+      )
 
     },
     signin(){
@@ -269,12 +269,11 @@ data() {
         email: this.loginUser.email,
         password: this.loginUser.password
       }
-      console.log(req)
-      this.$http.post('http://localhost:5001/Account/signIn', req).then(res => {
-        console.log(res.data)
-        this.$store.commit('setPlayer', res.data)
-        this.$router.push({ path: '/' })
-      }).catch(() => this.error = "Не удалось войти :(");
+      this.$store.commit('signIn', {
+        user: req,
+        action: () => this.$router.push({ path: '/' }),
+        errorHandler: () => this.error = "Не удалось войти :("
+      })
     }
   }
 }

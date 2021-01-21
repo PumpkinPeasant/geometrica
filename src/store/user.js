@@ -1,7 +1,6 @@
 export default {
     state: {
         player:[]
-
     },
     mutations: {
         setPlayer(state, payload){

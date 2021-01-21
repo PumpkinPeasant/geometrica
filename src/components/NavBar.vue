@@ -27,6 +27,7 @@
                     fab
                     color="purple accent-4"
                     dark
+                    flat
                     v-bind="attrs"
                     v-on="on"
                 >
@@ -64,12 +65,11 @@
                 </v-list>
 
                 <v-divider></v-divider>
-
+{{token}}
                 <v-list>
                   <v-list-item>
                     <v-btn :to="'/profile'" outlined  color="purple">Профиль</v-btn>
                   </v-list-item>
-
                   <v-list-item>
                     <v-btn outlined color="red" :to="'/'" @click="logOut">Выйти</v-btn>
                   </v-list-item>
@@ -87,7 +87,7 @@ name: "NavBar",
   data(){
     return{
       color: '#771AEE',
-      player: this.$store.getters.getPlayer,
+      token: this.$store.getters.getToken,
     }
   },
   methods:{
@@ -97,7 +97,7 @@ name: "NavBar",
   }
   },
   mounted() {
-
+    console.log(this.$store.getters.getToken)
   },
   computed:{
     menuItems(){
