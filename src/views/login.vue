@@ -1,6 +1,4 @@
 <template>
-  <div>
-    <v-content>
       <v-container class="fill-height" fluid>
         <v-row align="center" justify="center">
           <v-col >
@@ -12,7 +10,7 @@
                       <v-card-text class="mt-12">
                         <h1 class="display-2 "><b>Войти </b></h1>
                         <h5 class="display-1 purple--text text-accent-4">С возвращением, капитан!</h5>
-                        <div class="text-center" mt-4>
+                        <div class="text-center" >
                           <v-btn class="mx-2" fab color="black" outlined>
                             <v-icon v-html="'mdi-vk'"></v-icon>
                           </v-btn>
@@ -194,8 +192,6 @@
           </v-col>
         </v-row>
       </v-container>
-    </v-content>
-  </div>
 </template>
 
 <script>
@@ -254,12 +250,14 @@ data() {
         email: this.registerUser.email,
         password: this.registerUser.password
       }
+      console.log(req)
       this.$store.commit('signUp',
           {
             player: req,
             action: () => this.$router.push({ path: '/' }),
             errorHandler: () => this.error = "Не удалось зарегистрировать пользователя :("
           }
+
       )
 
     },
@@ -270,7 +268,7 @@ data() {
         password: this.loginUser.password
       }
       this.$store.commit('signIn', {
-        user: req,
+        player: req,
         action: () => this.$router.push({ path: '/' }),
         errorHandler: () => this.error = "Не удалось войти :("
       })

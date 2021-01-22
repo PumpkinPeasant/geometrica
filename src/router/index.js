@@ -2,6 +2,9 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Main.vue'
 import Login from '@/views/login'
+import Profile from '@/views/profile'
+import World from '@/views/world'
+import Store from '@/store'
 
 Vue.use(VueRouter)
 
@@ -15,6 +18,17 @@ const routes = [
     path: '/login',
     name: 'Login',
     component: Login
+  },
+  {
+    path: '/profile',
+    name: 'Profile',
+    component: Profile,
+    beforeEnter: AuthGuard
+  },
+  {
+    path: '/world',
+    name: 'World',
+    component: World
   },
   {
     path: '/about',
@@ -31,3 +45,11 @@ const router = new VueRouter({
 })
 
 export default router
+
+function AuthGuard(from, to, next){
+  if(Store.getters.getsAuthorized)
+
+    next()
+  else
+    next('/login')
+}

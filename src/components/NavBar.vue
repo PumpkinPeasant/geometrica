@@ -15,9 +15,8 @@
               {{item.title}}
             </v-tab>
           </v-tabs>
-          <div class="text-center" v-if="player">
+          <div class="text-center" v-if="isAuthorized">
             <v-menu
-                v-model="menu"
                 :close-on-content-click="false"
                 :nudge-width="200"
                 offset-x
@@ -27,7 +26,7 @@
                     fab
                     color="purple accent-4"
                     dark
-                    flat
+                    outlined
                     v-bind="attrs"
                     v-on="on"
                 >
@@ -52,20 +51,11 @@
                       <v-list-item-subtitle>Капитан, ур.1</v-list-item-subtitle>
                     </v-list-item-content>
 
-                    <v-list-item-action>
-                      <v-btn
-                          :class="fav ? 'red--text' : ''"
-                          icon
-                          @click="fav = !fav"
-                      >
-                        <v-icon>mdi-heart</v-icon>
-                      </v-btn>
-                    </v-list-item-action>
+
                   </v-list-item>
                 </v-list>
 
                 <v-divider></v-divider>
-{{token}}
                 <v-list>
                   <v-list-item>
                     <v-btn :to="'/profile'" outlined  color="purple">Профиль</v-btn>
@@ -82,22 +72,24 @@
 </template>
 
 <script>
+import {Player} from "@/models/player";
+
 export default {
 name: "NavBar",
   data(){
     return{
       color: '#771AEE',
-      token: this.$store.getters.getToken,
+      isAuthorized: false,
+      player: new Player()
     }
+  },
+  mounted() {
   },
   methods:{
   logOut(){
-    this.$store.commit('logoutPlayer')
-    this.player = []
-  }
-  },
-  mounted() {
-    console.log(this.$store.getters.getToken)
+    this.$store.commit('logOut')
+    this.isAuthorized = false
+    }
   },
   computed:{
     menuItems(){
@@ -122,10 +114,24 @@ name: "NavBar",
           route: '/login',
           icon: 'mdi-lock-outline'
         }
-
       ]
-    }
-}
+    },
+
+},
+  watch: {
+  '$store.state.AuthService.isAuthorized': {
+    immediate: true,
+    handler() {
+        if (this.$store.getters.getsAuthorized) {
+          this.isAuthorized = true
+          this.player = this.$store.getters.getPlayer
+        }
+        else {
+          this.isAuthorized = false
+        }
+      }
+    },
+  }
 }
 </script>
 
