@@ -251,14 +251,16 @@ data() {
         password: this.registerUser.password
       }
       console.log(req)
-      this.$store.commit('signUp',
-          {
-            player: req,
-            action: () => this.$router.push({ path: '/' }),
-            errorHandler: () => this.error = "Не удалось зарегистрировать пользователя :("
-          }
-
-      )
+      let payload = {
+          player: req,
+          action: () => {
+              this.$store.commit('setPlayer', payload.player)
+              this.$router.push({ path: '/' })
+          },
+          errorHandler: () => this.error = "Не удалось зарегистрировать пользователя :("
+      }
+      this.$store.commit('signUp', payload)
+      this.$store.commit('setPlayer', payload.player)
 
     },
     signin(){
@@ -267,11 +269,15 @@ data() {
         email: this.loginUser.email,
         password: this.loginUser.password
       }
-      this.$store.commit('signIn', {
+      let payload = {
         player: req,
-        action: () => this.$router.push({ path: '/' }),
+        action: () => {
+          this.$store.commit('setPlayer', payload.player)
+          this.$router.push({ path: '/' })
+        },
         errorHandler: () => this.error = "Не удалось войти :("
-      })
+      }
+      this.$store.commit('signIn', payload)
     }
   }
 }

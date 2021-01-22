@@ -141,7 +141,7 @@
                         <v-btn color="red" outlined @click="deleteAccount = true">Удалить аккаунт</v-btn>
                         <div class="pa-2" v-if="deleteAccount">
                           <p>Вы действительно хотите удалить аккаунт?</p>
-                          <p id="confDelete" class="red--text text-accent-2" @click="confirmDeleteAccount = true">Да, я хочу удалить аккаунт</p>
+                          <p id="confDelete" class="red--text text-accent-2" @click="deleteAcc" :to="'/login'">Да, я хочу удалить аккаунт</p>
                           <p id="rejDelete"  class="purple--text text-accent-2" @click="deleteAccount = false">Нет, я передумал</p>
                         </div>
                       </v-col>
@@ -161,6 +161,7 @@
                       color="purple accent-4"
                       text
                       @click="dialog = false"
+
                   >
                     Сохранить
                   </v-btn>
@@ -191,6 +192,8 @@
                   label="Найти друга"
                   append-icon="mdi-account-search-outline"
                   color="purple accent-4"
+                  @change="pullPlayers"
+                  v-model="queryValue"
               ></v-text-field>
 
               <v-list
@@ -212,7 +215,7 @@
                         </v-list-item-avatar>
 
                         <v-list-item-content>
-                          <v-list-item-title>{{user.uid}}</v-list-item-title>
+                          <v-list-item-title>{{user}}</v-list-item-title>
                         </v-list-item-content>
 
                         <v-row
@@ -290,20 +293,8 @@ export default {
       genders:[],
       confirmDeleteAccount: false,
       deleteAccount: false,
-      users:[
-        {uid: 'Игрок 1'},
-        {uid: 'Игрок 2'},
-        {uid: 'Cube'},
-        {uid: 'Игрок 1'},
-        {uid: 'Игрок 2'},
-        {uid: 'Cube'},
-        {uid: 'Игрок 1'},
-        {uid: 'Игрок 2'},
-        {uid: 'Cube'},
-        {uid: 'Игрок 1'},
-        {uid: 'Игрок 2'},
-        {uid: 'Cube'},
-      ],
+      users:[],
+      queryValue: '',
       headers: [
         {
           text: 'ID Игры',
@@ -331,7 +322,23 @@ export default {
     }
   },
   methods: {
+    deleteAcc(){
+      this.confirmDeleteAccount = true
+      this.dialog = false
 
+
+    },
+    pullPlayers(){
+      let payload = {
+        token: this.$store.getters.getToken,
+        action: res => {
+          this.users = res
+        },
+        name: this.queryValue,
+        handle: e => console.log(e)
+      }
+      this.$store.commit('findFriends', payload)
+    }
   },
   mounted() {
     this.$store.commit('pullUserGames', {
@@ -348,6 +355,7 @@ export default {
       handler() {
         if (this.$store.getters.getsAuthorized) {
           this.player = this.$store.getters.getPlayer
+          console.log(this.player)
         }
 
       }
@@ -358,6 +366,25 @@ export default {
         this.userGames = this.$store.getters.getUserGames
       }
     },
+    confirmDeleteAccount: {
+      immediate: true,
+      handler() {
+        if (this.confirmDeleteAccount) {
+          let payload = {
+            token: this.$store.getters.getToken,
+            action: res => {
+              console.log(res)
+              this.$store.commit('logOut')
+
+
+            },
+            handle: e => console.log(e)
+          }
+          this.$store.commit('deleteAccount', payload)
+          this.$router.push({ path: '/' })
+        }
+      }
+    }
   }
 }
 </script>

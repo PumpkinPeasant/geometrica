@@ -3,7 +3,7 @@ import {Player} from "@/models/player";
 
 export default {
     state: {
-        service: new HttpService('http://localhost:5001/Account/'),
+        service: new HttpService('http://localhost:5001/Auth/'),
         player: new Player(),
         isAuthorized: false,
         allPlayers: []
@@ -13,7 +13,7 @@ export default {
             state.service.Post('signUp', payload.player)
                 .then(req => {
                     localStorage.setItem('token', req.data.access_token);
-                    state.player = req.data.player
+                    payload.player = req.data.player
                     state.isAuthorized = true
                     payload.action()
                 })
@@ -26,7 +26,7 @@ export default {
                 .then(req => {
                     localStorage.setItem('token', req.data.access_token);
                     state.isAuthorized = true
-                    state.player = req.data.player
+                    payload.player = req.data.player
                     console.log(state.player)
                     payload.action()
                 })
@@ -46,7 +46,5 @@ export default {
     getters: {
         getToken: () => localStorage.getItem('token'),
         getsAuthorized: (state) => state.isAuthorized,
-        getPlayer: (state) => state.player
-
     }
 }

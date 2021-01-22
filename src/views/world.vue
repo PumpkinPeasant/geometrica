@@ -7,7 +7,12 @@
         :items-per-page="20"
         sort-by="rightguesses"
         sort-desc
-    ></v-data-table>
+    >
+      <template v-slot:item.num>
+        {{ num }}
+
+      </template>
+    </v-data-table>
   </div>
 </template>
 
@@ -18,15 +23,16 @@ export default {
 name: "world",
   data () {
     return {
+      num: 0,
       allGames: [],
       headers: [
         {
           text: '№',
           align: 'start',
-          value: '1',
+          value: 'num',
           sortable: false,
         },
-        { text: 'Игрок', value: 'player',sortable: false },
+        { text: 'Игрок', value: 'playerName',sortable: false },
         { text: 'Правильные ответы', value: 'rightguesses',sortable: false },
         { text: 'Неправильные ответы', value: 'wrongguesses', sortable: false, },
         { text: 'Время проходжения (сек.)', value: 'time', sortable: false, },
@@ -35,7 +41,6 @@ name: "world",
 },
   mounted() {
     this.$store.commit('pullAllGames')
-
   },
 watch: {
   '$store.state.GameService.allGames': {
