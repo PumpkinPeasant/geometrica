@@ -325,9 +325,19 @@ export default {
     deleteAcc(){
       this.confirmDeleteAccount = true
       this.dialog = false
-
-
     },
+    deleteItem(item){
+     let payload = {
+       token: this.$store.getters.getToken,
+       action: res => {
+         console.log(res)
+         this.$store.commit('setUserGames', res)
+       },
+       gameId: item.gameid,
+       handle: e => console.log(e)
+     }
+     this.$store.commit('deleteGame', payload)
+   },
     pullPlayers(){
       let payload = {
         token: this.$store.getters.getToken,

@@ -42,11 +42,11 @@ export default {
                 .catch(e => payload.handle(e))
         },
         deleteGame(state, payload) {
-            state.service.Delete(state.player.uid + 'deleteGame' + payload.gameId,
+            state.service.Delete(state.player.uid + '/deleteGame/' + payload.gameId,
                 {email: state.player.email, password: state.player.password},
                 {'Authorization': 'Bearer ' + payload.token})
-                .then(res => payload.action(res))
-                .catch(res => payload.handle(res))
+                .then(res => payload.action(res.data))
+                .catch(e => payload.handle(e))
         }
     },
     getters: {

@@ -18,12 +18,15 @@ export default {
                     'Authorization': 'Bearer ' + payload.token
                 }
             }).then(res => {
-                state.allGames = res.data
+                state.userGames = res.data
             })
         },
+        setUserGames(state, userGames) {
+            state.userGames = userGames
+        }
     },
     getters: {
         getAllGames: (state) => state.allGames,
-        getUserGames: (state) => state.allGames,
+        getUserGames: (state) => state.userGames,
     }
 }
